@@ -2,36 +2,20 @@ import React, { useState } from "react";
 import "./App.css";
 import { TaskType, TodoList } from "./TodoList";
 import { v1 } from "uuid";
-import { title } from "process";
 
-// export function Counter() {
-//   console.log("coonter rendered");
-//   let arr = useState(5);
-//   let data = arr[0];
-//   let setData = arr[1];
-//   return (
-//     <div
-//       onClick={() => {
-//         setData(data + 1);
-//       }}
-//     >
-//       {data}
-//     </div>
-//   );
-// }
 export type FilterValuesType = "all" | "completed" | "active";
 
-function App() {
+export function App() {
   let [tasks, setTasks] = useState<TaskType[]>([
     {
       id: v1(),
       title: "HTML&CSS",
-      isDone: true,
+      isDone: false,
     },
     {
       id: v1(),
       title: "JS",
-      isDone: true,
+      isDone: false,
     },
     {
       id: v1(),
@@ -45,6 +29,15 @@ function App() {
     },
   ]);
   let [filter, setFilter] = useState<FilterValuesType>("all");
+
+  function changeStatus(taskId: string, isDone: boolean) {
+    let task = tasks.find((t) => t.id === taskId);
+    if (task) {
+      task.isDone = isDone;
+    };
+
+    setTasks([...tasks]);
+  }
 
   function removeTask(id: string) {
     let filteredTasks = tasks.filter((t) => t.id != id);
@@ -77,9 +70,9 @@ function App() {
         removeTask={removeTask}
         changeFilter={changeFilter}
         addTask={addTask}
+        changeTasksStatus={changeStatus}
+        filter={filter}
       />
     </div>
   );
 }
-
-export default App;
