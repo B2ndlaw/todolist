@@ -1,5 +1,6 @@
 import { ChangeEvent, KeyboardEvent, useState } from "react";
 import { FilterValuesType } from "./App";
+import { AddItemForm } from "./AddItemForm";
 
 export type TaskType = {
   id: string;
@@ -16,49 +17,31 @@ type TodoListType = {
   addTask: (title: string, todoListId: string) => void;
   changeTasksStatus: (taskId: string, isDone: boolean, todoListId: string) => void;
   filter: FilterValuesType;
+  removeTodoList: (todoListId: string) => void
 };
 
 export function TodoList(props: TodoListType) {
-  let [newTaskTitle, setNewTaskTitle] = useState("");
-  let [error, setError] = useState<string | null>(null);
 
-  const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setNewTaskTitle(e.currentTarget.value);
-  };
 
-  const onKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
-    setError(null);
-    if (e.ctrlKey && e.charCode === 13) {
-      addTask();
-    }
-  };
 
-  const addTask = () => {
-    if (newTaskTitle.trim() !== "") {
-      props.addTask(newTaskTitle.trim(), props.id);
-      setNewTaskTitle("");
-    } else {
-      setError("Title is required");
-    }
-  };
+
+
 
   const onAllClickHandler = () => props.changeFilter("all", props.id);
   const onActiveClickHandler = () => props.changeFilter("active",props.id);
   const onCompletedClickHandler = () => props.changeFilter("completed",props.id);
+const removeTodoList = () => {
+props.removeTodoList(props.id)
+}
 
+const addTask =(title:string)=>{
+props.addTask(title, props.id)
+
+}
   return (
     <div>
-      <h3>{props.title}</h3>
-      <div>
-        <input
-          value={newTaskTitle}
-          onChange={onNewTitleChangeHandler}
-          onKeyPress={onKeyPress}
-          className={error ? "error" : ""}
-        />
-        <button onClick={addTask}>+</button>
-        {error && <div className="error-message">Title is required</div>}
-      </div>
+      <h3>{props.title}<button onClick={removeTodoList}>x</button></h3>
+      <AddItemForm addItem={addTask}/>
       <ul>
         {props.tasks.map((t) => {
           const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -101,3 +84,4 @@ export function TodoList(props: TodoListType) {
     </div>
   );
 }
+
