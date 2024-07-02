@@ -3,6 +3,11 @@ import "./App.css";
 import { TaskType, TodoList } from "./TodoList";
 import { v1 } from "uuid";
 import { AddItemForm } from "./components/AddItemForm";
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+
+
 
 export type FilterValuesType = "all" | "completed" | "active";
 type TodoListType = {
@@ -138,7 +143,12 @@ function changeTaskTitle(taskId: string, newTitle: string, todoListId: string) {
 
   return (
     <div className="App">
-      <AddItemForm addItem={addTodoList} />
+      <Container fixed>
+
+
+<Grid container sx={{mb:'30px'}}><AddItemForm addItem={addTodoList} /></Grid>
+      
+<Grid container spacing={4}>
       {todoLists.map((tl) => {
         let tasksForTodoList = tasksObj[tl.id];
         if (tl.filter === "completed") {
@@ -148,6 +158,8 @@ function changeTaskTitle(taskId: string, newTitle: string, todoListId: string) {
           tasksForTodoList = tasksForTodoList.filter((t) => t.isDone === false);
         }
         return (
+          <Grid item key={tl.id}>
+         <Paper elevation={6} sx={{p:'30px'}}>
           <TodoList
             key={tl.id}
             id={tl.id}
@@ -160,10 +172,14 @@ function changeTaskTitle(taskId: string, newTitle: string, todoListId: string) {
             filter={tl.filter}
             removeTodoList={removeTodoList}
             changeTaskTitle={changeTaskTitle}
-            changeTodoListTitle={changeTodoListTitle}
-          />
+            changeTodoListTitle={changeTodoListTitle}/>
+          </Paper>
+           </Grid>
         );
       })}
+      </Grid>
+      </Container>
     </div>
+
   );
 }
