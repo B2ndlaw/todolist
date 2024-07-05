@@ -10,7 +10,8 @@ import Paper from '@mui/material/Paper';
 
 
 export type FilterValuesType = "all" | "completed" | "active";
-type TodoListType = {
+
+export type TodoListType = {
   id: string;
   title: string;
   filter: FilterValuesType;
@@ -55,9 +56,6 @@ function changeTaskTitle(taskId: string, newTitle: string, todoListId: string) {
   }
 }
 
-
-
-
   function changeFilter(value: FilterValuesType, todoListId: string) {
     let todoList = todoLists.find((tl) => tl.id === todoListId);
     if (todoList) {
@@ -85,7 +83,7 @@ function changeTaskTitle(taskId: string, newTitle: string, todoListId: string) {
 
   const todoList = todoLists.find(tl=>tl.id===id);
   if(todoList){
-    todoList.title =newTitle;
+    todoList.title = newTitle;
     setTodoLists([...todoLists]);
   }
   }
