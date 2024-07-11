@@ -1,6 +1,7 @@
 import { v1 } from "uuid";
 import { TaskStateType } from "../App";
 import { addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer } from "./tasks-reducer";
+import { addTodoListAC, removeTodoListAC } from "./todolists-reducer";
 
 test("correct task should be delete from correct array", () => {
   const startState: TaskStateType = {
@@ -154,7 +155,7 @@ test("correct change task status should be change from correct array", () => {
 
 test("correct change task status should be change from correct array", () => {
   const startState: TaskStateType = {
-    todoListId1: [
+    "todoListId1": [
       {
         id: "1",
         title: "HTML&CSS",
@@ -172,7 +173,7 @@ test("correct change task status should be change from correct array", () => {
       },
     ],
 
-    todoListId2: [
+    "todoListId2": [
       {
         id: "1",
         title: "Book",
@@ -200,3 +201,108 @@ test("correct change task status should be change from correct array", () => {
   expect(endState["todoListId1"][1].title).toBe("JS");
 
 });
+
+test("new property with new array should be added when new todolist is add", () => {
+  const startState: TaskStateType = {
+    "todoListId1": [
+      {
+        id: "1",
+        title: "HTML&CSS",
+        isDone: false,
+      },
+      {
+        id: "2",
+        title: "JS",
+        isDone: true,
+      },
+      {
+        id: "3",
+        title: "ReactJS",
+        isDone: false,
+      },
+    ],
+
+    "todoListId2": [
+      {
+        id: "1",
+        title: "Book",
+        isDone: false,
+      },
+      {
+        id: "2",
+        title: "Milk",
+        isDone: true,
+      },
+      {
+        id: "3",
+        title: "Tea",
+        isDone: false,
+      },
+    ],
+  };
+  
+  const action = addTodoListAC("new title");
+
+  const endState = tasksReducer(startState, action);
+
+  const keys = Object.keys(endState);
+  const newKey = keys.find(k=>k!="todoListId1"&&k!="todoListId2");
+  if (!newKey){
+    throw Error("new key should be added")
+  }
+
+
+  expect(keys.length).toBe(3);
+  expect(endState[newKey]).toEqual([]);
+
+});
+
+
+test("property with todolistId should be deleted", ()=>{
+  const startState: TaskStateType = {
+    "todoListId1": [
+      {
+        id: "1",
+        title: "HTML&CSS",
+        isDone: false,
+      },
+      {
+        id: "2",
+        title: "JS",
+        isDone: true,
+      },
+      {
+        id: "3",
+        title: "ReactJS",
+        isDone: false,
+      },
+    ],
+
+    "todoListId2": [
+      {
+        id: "1",
+        title: "Book",
+        isDone: false,
+      },
+      {
+        id: "2",
+        title: "Milk",
+        isDone: true,
+      },
+      {
+        id: "3",
+        title: "Tea",
+        isDone: false,
+      },
+    ],
+  };
+  
+  const action = removeTodoListAC("todoListId2");
+
+  const endState = tasksReducer(startState, action);
+
+  const keys = Object.keys(endState);
+
+  expect(keys.length).toBe(1);
+  expect(endState["todoListId2"]).not.toBeDefined();
+})
